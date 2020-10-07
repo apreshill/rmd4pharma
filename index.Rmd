@@ -3,11 +3,13 @@ title: "rmd4pharma"
 description: |
   Welcome to R Markdown for Pharma &mdash; R/Pharma 2020
 site: distill::distill_website
+date: 2020-10-07
 author:
 - name: Alison Hill, Ph.D.
   url: https://alison.rbind.io
   affiliation: RStudio
   affiliation_url: https://rstudio.com
+  orcid_id: 0000-0002-8082-1890
 - name: Thomas Mock, Ph.D.
   url: https://themockup.blog
   affiliation: RStudio
@@ -23,7 +25,17 @@ This is the website for a four-hour workshop for R / Pharma 2020. In this worksh
 + Workflows for working with data
 + How to include and style graphics
 
+## RStudio Cloud
+
+<https://rstd.io/rmd4pharma-cloud>
+
 ## Slides
 
-TBD!
++ [01-rmd-anatomy](static/slides/01-rmd-anatomy.html)
+
++ [02-output-tables](static/slides/02-output-tables.html)
+
++ [03-graphics](static/slides/03-graphics.html)
+
++ [04-data-workflows](static/slides/04-data-workflows.html)
 

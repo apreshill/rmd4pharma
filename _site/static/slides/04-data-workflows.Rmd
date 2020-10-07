@@ -33,9 +33,12 @@ knitr::opts_chunk$set(
 options(knitr.table.format = "markdown")
 ```
 
+
 ```{r packages, include=FALSE}
 library(countdown)
 library(ymlthis)
+library(palmerpenguins)
+library(tidyverse)
 ```
 
 
@@ -52,22 +55,17 @@ class: title-slide, center, middle
 
 ### `r rmarkdown::metadata$author` &#183; RStudio
 
-#### [rmd4pharma.netlify.app/](https://rmd4pharma.netlify.app/)
-
+#### [https://rmd4pharma.netlify.app//](https://https://rmd4pharma.netlify.app//)
 
 ---
+
 class: middle, center
 
 # <i class="fas fa-cloud"></i>
 
 # Go here and log in (free):
 
-<https://rstd.io/rmd4pharma-cloud>
-
----
-layout: true
-
-<div class="my-footer"><span>https://rmd4pharma.netlify.app/</span></div>
+http://rstd.io/rmd4pharma-cloud
 
 ---
 class: middle, center, inverse
@@ -79,102 +77,48 @@ class: middle, center, inverse
 
 --
 
-# Hygiene
-
-
----
-class: middle, center
-
-# Philosophy
-
---
-
-.pull-left[
-
-### Less
-
-# `r emo::ji("mouse")`
-]
-
-.pull-right[
-
-### More
-
-# `r emo::ji("musical_keyboard")`
-]
+# Parameters
 
 ---
-class: middle, center
+class: left, top
 
+### Knit with Parameters
 
-.pull-left[
-```{r, echo = FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/hadley/r4ds/master/screenshots/rstudio-workspace.png")
-```
-]
+.tiny[
 
-.pull-right[
-# <i class="fas fa-mouse-pointer"></i>
-
-In RStudio: _Tools > Global Options_
-
-]
-
+````
 ---
-class: middle, center
-
-# Restart R early & often
-
-.pull-left[
-# <i class="fas fa-mouse-pointer"></i>
-
-In RStudio: _Session > Restart R_
-]
-
-.pull-right[
-# <i class="far fa-keyboard"></i>
-
-`Cmd/Ctrl` + `Shift` + `F10` (Mac)   
-or  
-`Ctrl` + `Shift` + `F10` (Windows/Linux)
-
-]
-
+title: "Penguins"
+output: html_document
+params:
+  species: Adelie
 ---
-class: middle, center
 
-# Reknit up to...
-
-.pull-left[
-# <i class="fas fa-mouse-pointer"></i>
-
-![](images/rstudio-runabove.png)
-
-]
-
-.pull-right[
-# <i class="far fa-keyboard"></i>
-
-Place cursor anywhere in your doc then:
-
-`Command` + `Option` + `P` (Mac)  
-or  
-`Ctrl`+`Alt`+`P`  (Windows/Linux)
-]
-
-
----
-class: middle, center
-
-# <i class="fas fa-smoking-ban"></i>
-
-# Not recommended
-
-```{r eval = FALSE}
-rm(list = ls())
+```{r setup, include = FALSE}`r ''`
+library(tidyverse) 
+smaller <- palmerpenguins::penguins %>% 
+  filter(species == params$species,
+         !is.na(body_mass_g))
 ```
 
-.footnote[https://whattheyforgot.org/save-source.html#rm-list-ls]
+# Penguins
+`r knitr::inline_expr("nrow(palmerpenguins::penguins) - nrow(smaller)")` penguins are classified as `r knitr::inline_expr("params$species")`.
+
+```{r, echo = FALSE, message = FALSE}`r ''`
+smaller %>%
+  ggplot(aes(x = body_mass_g, y = flipper_length_mm)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(title = params$species)
+```
+
+````
+]
+
+---
+
+![](images/penguins.png)
+
 
 ---
 class: middle, center, inverse
@@ -186,161 +130,151 @@ class: middle, center, inverse
 
 --
 
-# Projects
+# Command Line
 
 
 ---
-class: center, middle
+class: left, top
 
-# R projects
-
-```{r echo=FALSE}
-knitr::include_graphics("images/rproj.png")
-```
-
-
----
-class: middle, center
-
-.pull-left[
-# <i class="fas fa-mouse-pointer"></i>
-
-_File > New Project..._
-```{r, echo = FALSE}
-knitr::include_graphics("images/rstudio-new.png")
-```
-]
---
-
-.pull-right[
-# <i class="fas fa-mouse-pointer"></i>
-
-Pick one
-```{r, echo = FALSE}
-knitr::include_graphics("images/rstudio-newproj.png")
-```
-]
-
----
-class: middle, center
-
-
-# <i class="far fa-keyboard"></i>
-
-Equivalent to:
-_File > New Project...>_ New or Existing
+### `rmarkdown::render()`
 
 ```{r, eval = FALSE}
-library(usethis)
-create_project(here::here())
+library(rmarkdown) # needs to be loaded first
+render("rmarkdown-report.Rmd")
 ```
-
-.footnote[https://usethis.r-lib.org/reference/create_package.html]
-
----
-class: middle, center
-
-.pull-left[
-# <i class="fas fa-mouse-pointer"></i>
-
-_File > New File > R Markdown..._
-```{r, echo = FALSE}
-knitr::include_graphics("images/rstudio-newfile.png")
-```
-]
---
-
-.pull-right[
-# <i class="fas fa-mouse-pointer"></i>
-
-Fill in, can leave as HTML
-```{r, echo = FALSE}
-knitr::include_graphics("images/rstudio-newrmd.png")
-```
-]
-
----
-class: middle, center
-
-.pull-left[
-# <i class="fas fa-trash-alt"></i>
-
-![](images/rstudio-freshrmd.png)
-]
 
 --
 
-.pull-right[
-# <i class="fas fa-save"></i>
-
-![](images/rstudio-blankrmd.png)
-]
-
----
-class: live-code
-
-# Live code demo
-
-We make our first R project from scratch with a single R Markdown file inside.
-
-
----
-class: middle, center, inverse
-
-<span class="fa-stack fa-4x">
-  <i class="fa fa-circle fa-stack-2x" style="color: #fff;"></i>
-  <strong class="fa-stack-1x" style="color:#2f5275;">`r (episode_counter <- episode_counter + 1)` </strong>
-</span> 
+Now that was easy! But why would you want to use `render` rather than just clicking `knit`?
 
 --
 
-# External files
+How about running a batch of RMDs?  
++ a report  
++ a safety document  
++ a slide deck  
++ or a full website  
+
+--
+
+Run for each drug of interest *all at once*!
 
 ---
-class: center
 
-```{r echo=FALSE}
-knitr::include_graphics("images/Data.jpg")
-```
+layout: true
 
-???
+<div class="my-footer"><span>https://rstd.io/rmd4pharma-cloud</span></div>
 
-save a local copy, keep raw data raw
 
 ---
-class: middle
+class: top, left
 
-# File paths
+# Render loops
 
-.pull-left[
+--
 
-### <i class="far fa-thumbs-down"></i>
-
-```{r eval=FALSE}
-"~/mm/nope.csv"
-setwd("/haha/good/luck/")
-setwd('c:\iamyournightmare\!')
-setwd("C:\user\oh\no")
-setwd("path/that/only/works/on/my/machine")
+```{r}
+# the setup
+unique_species <- unique(palmerpenguins::penguins$species)
+unique_species
 ```
 
-### <i class="far fa-thumbs-up"></i>
+--
 
-```{r eval=FALSE}
-mockdata <- read_csv(
-  here::here("data/mockdata.csv")
+```{r for-loop, eval = FALSE}
+# the loop
+for(species in unique_species){
+  rmarkdown::render(
+    "penguin-report.Rmd",
+    params = list(species = species)
   )
+}
 ```
 
-]
+#### <i class="fas fa-smoking-ban"></i> psst...the wrong way - but what's wrong?  
 
-.pull-right[
-```{r echo=FALSE, fig.align="center", fig.cap="Art by Allison Horst", out.width="90%"}
-knitr::include_graphics("images/horst_here.png")
+--
+
+* What's the name of the output report?
+
+---
+class: top, left
+
+
+### We need two things
+
+For the `rmarkdown::render()` function to work the way we want:  
+1. The list of species -> `params` 
+2. The name of each report -> `output_file`  
+
+We could do this with a loop, but let's start **purrr**ing...
+
+---
+class: middle, center
+
+> "Of course *someone* has to write **loops**.  
+> It doesn't have to be *you*.  
+> `-` Jenny Bryan
+
+---
+class: middle, center
+
+![](https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/map_frosting.png)
+
+---
+class: middle, center
+
+![](https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/map2_cupcakes.png)
+
+
+---
+class: top, left
+
+### Rendering multiple reports
+
+```{r purrr-render, eval = FALSE}
+# the setup
+unique_species <- unique(palmerpenguins::penguins$species)
+
+# the function
+penguin_render <- function(species){
+  rmarkdown::render(
+    "penguin-report.Rmd",
+    output_file = paste0(species, "-report.html"),
+    params = list(species = species)
+  )
+}
+
+# create the reports
+purrr::walk(unique_species, penguin_render)
 ```
-]
 
-https://whattheyforgot.org/project-oriented-workflow.html#setwd
+
+---
+class: your-turn
+
+# Your turn
+
+Use this format to create separate site reports for each of the 13 sites in our `mockdata`. Note that there are two main files:  
+- `project/analysis/R/parameterized-rmd.R` -- **Skeleton code**  
+- `project/analysis/reports/site-report.Rmd` -- **Actual report**  
+
+```{r purrr-render-try, eval = FALSE}
+# the setup
+unique_species <- unique(palmerpenguins::penguins$species)
+
+# the function
+penguin_render <- function(species){
+  rmarkdown::render(
+    "penguin-report.Rmd",
+    output_file = paste0(species, "-report.html"),
+    params = list(species = species)
+  )
+}
+
+# create the reports
+purrr::walk(unique_species, penguin_render)
+```
 
 ---
 class: middle, center, inverse
@@ -352,350 +286,128 @@ class: middle, center, inverse
 
 --
 
-# Bibliography
+# Reference external R code
 
 ---
+class: top, left
 
+### Entire .R files
 
-See [citations](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html#citations)
+`source()` will allow you to read in entire .R files, and is commonly used to *source* external R functions.
 
+--
 
-.pull-right[
-Generates these in-text citation styles:
+### Chunks of .R files
 
-1. Blah blah [see @R-blogdown, pp. 33-35; also @R-knitr, ch. 1].
+Adding `## ----` and a name to read chunks by name with `knitr::read_chunk()`  
 
-2. Blah blah [@R-blogdown, pp. 33-35].
-
-3. Blah blah [@R-blogdown; @R-knitr].
-
-4. Yihui says blah [-@R-blogdown].
-
-5. @R-blogdown says blah.
-
-]
-
----
-class: your-turn
-
-# Your turn
-
-### Choose your adventure
-
-1. Take `04-manuscript.Rmd` and add in the tables and figures in code chunks, with code chunk options that make sense. `r emo::ji("yarn")` __Knit__ and/or run chunks interactively as you work.
-
-1. Play with knitting to different output formats. Try to figure out valid output options for each format you can add to your YAML. 
-
-1. Go to https://github.com/thomasp85/scico and try knitting with different palette names. Pick a favorite.
-
-__Too much?__ Look at `04-manuscript-alison.Rmd`, `r emo::ji("yarn")` __Knit__. Then do 2 and 3 above.
-
-__Not enough?__ See next slide for building a graphical user interface for parameters.
-
-```{r echo=FALSE}
-countdown(minutes = 15)
+```{r external-r-file,  eval = FALSE}
+## ---- smaller-penguins
+smaller <- penguins %>%
+  filter(
+   species == "Adelie",
+   !is.na(body_mass_g)
+   )
+## ---- plot-penguins
+smaller %>%
+ ggplot(aes(body_mass_g)) +
+ geom_histogram(binwidth = 100)
 ```
 
+
 ---
-class: your-turn
-
-# Your turn
-
-### Extra: Play more with parameters
+class: top, left
 
 .pull-left[
+### Parent R Markdown
 
-From `03-draft.Rmd`
-
-```{r echo = FALSE}
-yml_empty() %>% 
-  yml_params(palette = "berlin") %>% 
-  asis_yaml_output()
+````
+---
+title: "Penguins"
+date: 2020-08-11
+output: html_document
+---
+```{r setup, include = FALSE}`r ''`
+library(tidyverse)
+library(palmerpenguins)
+```
+```{r, child=c(“adelie-report.Rmd”)}`r ''`
 ```
 
+````
+
 ]
+--
 
 .pull-right[
+### Child R Markdown  
+`adelie-report.Rmd`  
 
-Try in `04-manuscript.Rmd`
-
-```{r echo = FALSE}
-yml_empty() %>% 
-  yml_params(
-    palette = shiny_select("scico palette:", 
-                           choices = c("berlin", "roma", "cork", "grayC"), 
-                           selected = "roma", 
-                           multiple = FALSE)
-  ) %>% 
-  asis_yaml_output()
-```
-]
-
+````
 ---
-
-# If we have time...
-
-
-.pull-left[
-
-Open & Knit:
-
-`analyis/presentations/slides.Rmd`
-
-```{r echo=FALSE}
-yml_empty() %>% 
-  yml_output(beamer_presentation(slide_level = 2),
-             powerpoint_presentation(),
-             revealjs::revealjs_presentation()) %>% 
-  asis_yaml_output()
+output: html_document
+---
+```{r, echo = FALSE}`r ''`
+smaller <- penguins %>%
+ filter(species == "Adelie",
+ !is.na(body_mass_g))
 ```
-]
-
-.pull-right[
-
-```{r echo = FALSE}
-beamer_slides <-
-  fs::dir_ls(path=here::here("static/slides/images"), 
-           regexp="beamer*") %>%  
-  purrr::map(magick::image_read) %>% 
-  magick::image_join() %>% 
-  magick::image_animate(fps = 1) 
-beamer_slides
+# Penguins
+`r knitr::inline_expr("nrow(penguins) - nrow(smaller)")` penguins 
+are classified as `r knitr::inline_expr("params$species")`.
+```{r, echo = FALSE}`r ''`
+smaller %>%
+ ggplot(aes(body_mass_g)) +
+ geom_histogram(binwidth = 100)
 ```
 
-
+````
 ]
 
 
 ---
-class: middle, center, inverse
 
+## Conditional Child Documents
 
-# Time to wrap-up!
+Add specific chunks if conditions met!
 
-```{r echo = FALSE}
-countdown(minutes = 15, update_every = 15)
+````
+---
+title: "Drug Safety and Response"
+output: html_document
+---
+```{r setup, include = FALSE}`r ''`
+library(tidyverse)
+drug_data <- read_csv("drug-data.csv)
+
+pass_fail <- summarize(drug_data, mean = mean(toxicity_param))
 ```
 
----
-class: middle, center, inverse
-
-<span class="fa-stack fa-4x">
-  <i class="fa fa-circle fa-stack-2x" style="color: #fff;"></i>
-  <strong class="fa-stack-1x" style="color:#2f5275;">!</strong>
-</span> 
-
-
-# Extension formats
-
----
-class: middle, center
-
-# Dashboards
-
-```{r echo = FALSE, out.width = "50%", fig.link="https://jenthompson.me/examples/progressdash.html"}
-knitr::include_graphics("https://jenthompson.me/images/flexdash_example.png")
+```{r, child=if (pass_fail >= 1.5) “safe-drug-addendum.Rmd”}`r ''`
 ```
 
-https://jenthompson.me/examples/progressdash.html
-
-https://jenthompson.me/2018/02/09/flexdashboards-monitoring/
-
----
-class: middle, center
-
-# Presentations
-
-```{r echo = FALSE, out.width="50%"}
-beamer_slides
+# Dose Response
+```{r}`r ''`
+ggplot(drug_data, aes(x = drug_cocn, y = drug_response)) +
+ geom_point() +
+ geom_smooth()
 ```
 
-https://bookdown.org/yihui/rmarkdown/presentations.html
+
+````
 
 ---
-class: middle, center, inverse
+class: left, top
 
-<span class="fa-stack fa-4x">
-  <i class="fa fa-circle fa-stack-2x" style="color: #fff;"></i>
-  <strong class="fa-stack-1x" style="color:#2f5275;">!</strong>
-</span> 
+### Links
 
-
-# Cheatsheets!
-
----
-class: middle
-
-.left-column[
-
-# `r emo::ji("pushpin")`
-
-]
-
-.right-column[
-
-_Help > Cheatsheets > RStudio IDE_
-
-```{r echo = FALSE, out.width = "50%", fig.link="https://www.rstudio.com/resources/cheatsheets/#ide"}
-knitr::include_graphics("https://442r58kc8ke1y38f62ssb208-wpengine.netdna-ssl.com/wp-content/uploads/2018/08/rstudio-ide.png")
-```
-]
-
-.footnote[https://www.rstudio.com/resources/cheatsheets/#ide]
-
----
-class: middle
-
-.left-column[
-# `r emo::ji("pushpin")`
-]
-
-.right-column[
-_Help > Cheatsheets > R Markdown Cheat Sheet_
-
-```{r echo = FALSE, out.width="50%", fig.link="https://www.rstudio.com/resources/cheatsheets/#rmarkdown"}
-knitr::include_graphics("https://442r58kc8ke1y38f62ssb208-wpengine.netdna-ssl.com/wp-content/uploads/2018/08/rmarkdown-2.0.png")
-```
-]
-
-.footnote[https://www.rstudio.com/resources/cheatsheets/#rmarkdown]
-
----
-class: middle
-
-.left-column[
-# `r emo::ji("pushpin")`
-]
-
-.right-column[
-_Help > Cheatsheets > R Markdown Reference Guide_
-
-```{r echo = FALSE, out.width = "40%", fig.link="https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf"}
-knitr::include_graphics("https://442r58kc8ke1y38f62ssb208-wpengine.netdna-ssl.com/wp-content/uploads/2015/03/rmarkdown-reference-guide.png")
-```
-
-]
-
-.footnote[https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf]
-
----
-class: middle, center, inverse
-
-<span class="fa-stack fa-4x">
-  <i class="fa fa-circle fa-stack-2x" style="color: #fff;"></i>
-  <strong class="fa-stack-1x" style="color:#2f5275;">!</strong>
-</span> 
-
-
-# Book!
-
----
-class: middle
-
-.left-column[
-# `r emo::ji("book")`
-]
-
-.right-column[
-
-```{r echo = FALSE, out.width = "40%", fig.link="https://bookdown.org/yihui/rmarkdown/"}
-knitr::include_graphics("https://bookdown.org/yihui/rmarkdown/images/cover.png")
-```
-]
-
-.footnote[https://bookdown.org/yihui/rmarkdown/]
-
-
----
-class: middle, center, inverse
-
-<span class="fa-stack fa-4x">
-  <i class="fa fa-circle fa-stack-2x" style="color: #fff;"></i>
-  <strong class="fa-stack-1x" style="color:#2f5275;">!</strong>
-</span> 
-
-
-# Websites!
-
----
-class: middle
-
-.left-column[
-# `r emo::ji("link")`
-]
-
-.right-column[
-
-```{r echo = FALSE, out.width = "80%", fig.link="https://rmarkdown.rstudio.com/"}
-knitr::include_graphics("images/rmarkdown-site.png")
-```
-]
-
-.footnote[https://rmarkdown.rstudio.com/]
-
----
-class: middle
-
-.left-column[
-# `r emo::ji("link")`
-]
-
-.right-column[
-
-```{r echo = FALSE, out.width = "80%", fig.link="https://rmarkdown.rstudio.com/docs/"}
-knitr::include_graphics("images/rmarkdowndocs-site.png")
-```
-]
-
-.footnote[https://rmarkdown.rstudio.com/docs/]
-
----
-class: middle
-
-.left-column[
-# `r emo::ji("dart")`
-]
-
-.right-column[
-
-```{r echo = FALSE, out.width = "80%", fig.link="https://community.rstudio.com/c/R-Markdown"}
-knitr::include_graphics("images/rmarkdowncommunity-site.png")
-```
-]
-
-.footnote[https://community.rstudio.com/c/R-Markdown]
-
----
-class: middle
-
-.left-column[
-# `r emo::ji("robot")`
-]
-
-.right-column[
-
-```{r echo = FALSE, out.width = "80%", fig.link="https://rmarkdown.rstudio.com/lesson-6.html"}
-knitr::include_graphics("https://raw.githubusercontent.com/rstudio/rmarkdown/gh-pages/lesson-images/params-1-hawaii.png")
-```
-]
-
-.footnote[https://bookdown.org/yihui/rmarkdown/parameterized-reports.html,<br>
-https://rmarkdown.rstudio.com/lesson-6.html]
-
----
-
-# More
-
-+ [`redoc` `r emo::ji("package")`](https://noamross.github.io/redoc/)
-
-+ [`spelling` `r emo::ji("package")`](https://docs.ropensci.org/spelling/)
-
-+ [`wordcountaddin` `r emo::ji("package")`](https://github.com/benmarwick/wordcountaddin)
-
++ [Parameterized Reports](https://bookdown.org/yihui/rmarkdown/parameterized-reports.html)  
++ [Parameterized Lesson](https://rmarkdown.rstudio.com/lesson-6.html)  
++ [RMarkdown Cookbook](https://bookdown.org/yihui/rmarkdown-cookbook/)  
++ [RMarkdown Definitive Guide](https://bookdown.org/yihui/rmarkdown/)  
 
 ---
 class: inverse, middle, center
 
 # Thank you!
 
-Thanks to Peter Higgins & Daniel Chen for all their hard work

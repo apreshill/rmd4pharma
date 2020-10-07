@@ -16,7 +16,7 @@
       ],
       "date": "2020-10-07",
       "contents": "\nWelcome\nThis is the website for a four-hour workshop for R / Pharma 2020. In this workshop, we’ll take you on a tour of how to get from data to manuscript using R Markdown. You’ll learn:\nThe basics of Markdown & knitr\nHow to add tables for different outputs\nWorkflows for working with data\nHow to include and style graphics\nRStudio Cloud\nhttps://rstd.io/rmd4pharma-cloud\nSlides\n01-rmd-anatomy\n02-output-tables\n03-graphics\n04-data-workflows\n\n\n\n",
-      "last_modified": "2020-10-07T06:29:16-04:00"
+      "last_modified": "2020-10-07T08:06:41-04:00"
     }
   ],
   "collections": []
